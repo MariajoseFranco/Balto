@@ -23,9 +23,7 @@ export async function createCustomer(customerData, shopifyGraphQLUrl, headers) {
       message
     }
    }
-  }
-  `;
-
+  }`;
   try {
     const response = await axios.post(shopifyGraphQLUrl, {query: createCustomerQuery}, {headers});
     const responseData = response.data.data.customerCreate;
@@ -34,7 +32,7 @@ export async function createCustomer(customerData, shopifyGraphQLUrl, headers) {
       console.error('Error creating customer:', responseData.userErrors);
     } else {
       const newCustomer = responseData.customer;
-      console.log('Customer Created:', newCustomer);
+      console.log('Customer Created Correctly');
     }
   } catch (error) {
     console.error('Error:', error.message);
@@ -63,9 +61,7 @@ export async function updateCustomer(customerData, shopifyGraphQLUrl, headers) {
         message
       }
     }
-  }
-  `;
-
+  }`;
   try {
     const response = axios.post(shopifyGraphQLUrl, {query: updateCustomerQuery}, {headers});
     const responseData = response.data.data.customerUpdate;
@@ -74,7 +70,7 @@ export async function updateCustomer(customerData, shopifyGraphQLUrl, headers) {
       console.error('Error updating customer:', responseData.userErrors);
     } else {
       const updatedCustomer = responseData.customer;
-      console.log('Customer Updated:', updatedCustomer);
+      console.log('Customer Updated Correctly');
     }
   } catch (error) {
     console.error('Error:', error.message); // ACA ME SALE UN ERROR QUE HAY QUE CORREGIR
@@ -105,24 +101,30 @@ export async function fillingCustomerData(customerData, customer) {
 
 // Function to send emails. This function receives:
 // customer: The costumer information
-export async function sendEmails(customer) {
+// HOST: SMTP server that is used to send emails
+// MAIL_USER: Email user
+// PASSWORD: Password
+export async function sendEmails(customer, HOST, MAIL_USER, PASSWORD) {
+  // Configure transporter
   const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
+    host: `smtp.${HOST}.com`,
     port: 587,
     secure: false,
     auth: {
-      user: 'mfrancoo9906@gmail.com',
-      pass: 'tvbqu pjtp vsgk abnq',
+      user: `${MAIL_USER}`,
+      pass: `${PASSWORD}`,
     },
   });
 
+  // Configure mail options
   const mailOptions = {
-    from: 'mfrancoo9906@gmail.com',
+    from: `${MAIL_USER}`,
     to: customer.email,
     subject: 'Congratulations!',
     text: `Congrats ${customer.name}! Ever since you became a Balto customer on ${customer.signupDate}, you've gained ${customer.totalLikes} likes and ${customer.totalFollowers} follows.`,
   };
 
+  // Send the email
   try {
     await transporter.sendMail(mailOptions);
     console.log(`Email sent to ${customer.name}`);
