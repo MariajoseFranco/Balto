@@ -108,8 +108,8 @@ export async function sendEmails(customer, HOST, MAIL_USER, PASSWORD) {
   // Configure transporter
   const transporter = nodemailer.createTransport({
     host: `smtp.${HOST}.com`,
-    port: 587,
-    secure: false,
+    port: 465,
+    secure: true,
     auth: {
       user: `${MAIL_USER}`,
       pass: `${PASSWORD}`,
